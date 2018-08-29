@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://unpkg.com/vue"></script>
+    <style>
+      body {
+        text-align: center;
+        background-color: black;
+        color: white;
+      }
+      #game {
+        width: 325px
+      }
+      #board {
+        display: flex;
+        flex-flow: row;
+        flex-wrap: wrap
+      }
+      .pos {
+        border: 3px solid white;
+        height: 100px;
+        width: 100px;
+        text-align: center
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game">
+      <header>
+        <h1>
+          {{title}}
+        </h1>
+      </header>
+      <div id="board">
+        <div v-for="(position, index) in positions">
+          <div v-on:click="clickPos" class="pos" :id="index">{{position}}</div>
+        </div>
+      </div>
+      <button v-on:click="reset">Reset</button>
+    </div>
+    <script>
+      var game = new Vue({
+        el: "#game",
+        data: {
+          title: "Tic Tac Toe",
+          positions: ["", "", "", "", "", "", "", "", ""],
+          winningCombos: [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+          ],
+          player: "X"
+        },
+        methods: {
+          clickPos: function(e) {
+            if(e.target.innerHTML === ""){
+              let positions = this.positions
+              positions[e.target.id] = this.player
+              this.$set(positions, positions)
+              player = this.player == "X" ? "O" : "X"
+              this.checkForWinner()
+              this.player = player
+            }
+          },
+          checkForWinner: function(){
+            var match = this.winningCombos.find((c) => {
+              return this.positions[c[0]] == this.positions[c[1]] && this.positions[c[0]] == this.positions[c[2]] && this.positions[c[0]] == this.player
+            })
+            if(match){
+              alert(`${this.player} wins!`) 
+            } else if(!this.positions.includes('')){
+              alert("It's a cat's game!")
+            }
+          },
+          reset: function() {
+            window.location.reload()
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
